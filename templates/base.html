@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}{% endblock %} | Aprendizado por Reforço
+    </title>
+    <link  rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    {% block pagestyle %}
+    {% endblock pagestyle %}
+</head>
+
+<body>
+    <header id="staticpages-header">
+        <h1>Algoritmos de RL</h1>
+        <nav id="staticpages-nav">
+            <ul>
+                <li class="nav__item"><a href="{% url 'index' %}" class="icon__page">
+                    <span class="material-icons">home </span>
+                    Home
+                </a></li>
+                <li class="nav__item"><a href="{% url 'about' %}" class="icon__page">
+                    <span class="material-icons">info </span>
+                    Sobre
+                </a></li>
+            </ul>
+        </nav>
+    </header>
+    <main id="staticpages-main">
+        {% block content %}
+        {% endblock content %}
+    </main>
+    <footer id="staticpages-footer">
+        <p> Copyright 2023 Vítor Viana </p>
+    </footer>
+</body>
+
+</html>

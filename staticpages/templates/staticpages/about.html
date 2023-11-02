@@ -1,33 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt-br">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reinforcement Learning</title>
-</head>
+{% block title %}
+Sobre
+{% endblock title %}
 
-<body>
-    <header id="staticpages-header">
-        <nav id="staticpages-nav">
-            <a href="{% url 'index' %}">
-                <p>Algoritmos de RL</p>
-            </a>
-            <ul>
-                <li><a href="{% url 'about' %}">Sobre</a></li>
-            </ul>
-        </nav>
-
-    </header>
-    <main id="staticpages-main">
-        <h2>Sobre este site</h2>
-    </main>
-    <footer id="staticpages-footer">
-        <p>
-            <small>Copyright 2021</small>
-        </p>
-    </footer>
-</body>
-
-</html>
+{% block content %}
+<h2>Sobre este site</h2>
+{% endblock content %}

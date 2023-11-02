@@ -1,0 +1,51 @@
+#staticpages-header {
+    background-color: blueviolet;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+#staticpages-header h1 {
+    font-family: cursive;
+    color: white;
+    text-align: center;
+  }
+  
+#staticpages-header a{
+    color: white;
+    text-decoration: none;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
+#staticpages-header a:hover{
+    color: pink;
+  }
+
+#staticpages-footer {
+    background-color: gray;
+    display: flex;
+    justify-content: center;
+  }
+  
+body {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+.nav__item {
+    display: inline-block;
+    padding: 10px;
+    margin: 0 20px 0 10px;
+  }
+  
+@media screen and (max-width: 700px) {
+    .nav__item {
+      margin: 0 10vw 0 10vw; 
+    }
+  }
+
+.material-icons {
+    font-size: 20px;
+    vertical-align: sub;
+  }
