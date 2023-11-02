@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Algoritmos
+{% endblock title %}
+
+{% block pagestyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_infopages.css' %}">
+{% endblock pagestyle %}
+
+{% block content %}
+<h2>UCB</h2>
+<p>
+    O nome UCB vem de <i>Upper-Confidence-Bound</i> ou Intervalo Superior de Confiança. 
+    Esse algoritmo também busca inserir a exploração na tomada de ações, mas ao contrário 
+    do ε-greedy, as ações não são totalmente aleatórias na exploração. Utiliza-se o 
+    intervalo de confiança para selecionar ações próximas ao valor máximo, cujo valor 
+    de incerteza leva a borda superior para o valor máximo, de modo que esta será retornada 
+    pela função <i>argmax</i>.
+</p>
+<img class="math_equation" src="{% static 'images/ucb.jpg' %}" alt="Equação que define o limite superior">
+<p>
+    No argumento passado para a função, o primeiro termo corresponde ao comportamento 
+    <i>exploit</i> enquanto que o segundo ao <i>explore</i>. Em termos da seleção gananciosa de ação, 
+    quanto maior for o valor estimado para a ação, maior será o resultado da soma. 
+    Já em relação à exploração, à medida que o tempo <i>t</i> cresce sem que a ação <i>a</i> 
+    seja tomada (o denominador <i>N</i> permanece constante), o segundo termo que está 
+    associado à incerteza aumenta fazendo com que todas as ações sejam eventualmente 
+    escolhidas quando esse número se torna maior. A constante <i>c</i> controla a taxa de 
+    exploração do algoritmo, cuja implementação é apresentada: 
+</p>
+<div class="code-slide">
+    <pre>
+        <code>
+    class UCB():
+        def __init__(self, k_arms, c_param=0.1):
+            self.c_param = c_param
+            self.k_arms = k_arms
+            self.n_arms = np.zeros(k_arms)
+            self.Q_values = np.zeros(k_arms)
+            self.UCB_values = np.zeros(k_arms)
+            self.last_action = np.random.randint(0, k_arms)
+
+        def agent_step(self, reward):
+
+            self.n_arms[self.last_action] += 1
+            current_Q = self.Q_values[self.last_action] + (reward - self.Q_values[self.last_action])/self.n_arms[self.last_action]
+            self.Q_values[self.last_action] = current_Q
+
+            for a in range(self.k_arms):
+            if self.c_param == 0:
+                self.UCB_values[a] = self.Q_values[a]
+            elif self.n_arms[a] == 0:
+                self.UCB_values[a] = float("inf")
+            else:
+                self.UCB_values[a] = self.Q_values[a] + self.c_param * np.sqrt(np.log(np.sum(self.n_arms))/self.n_arms[a])
+
+            current_action = argmax(self.UCB_values)
+            self.last_action = current_action
+
+            return self.last_action
+        </code>
+    </pre>
+</div>
+<p>
+    Com o agente treinado, foram simuladas 200 rodadas com 1000 instantes discretos de 
+    tempo em cada uma, atingindo um valor de recompensa média bastante alto e bem rápido 
+    se comparar com os demais algoritmos.
+</p>
+<img class="content__image" src="{% static 'images/ucb_performance.jpg' %}" alt="Curva para UCB">
+<p>
+    Nos steps iniciais os valores esperados estão sendo atualizados para todas as ações 
+    (exploração), uma vez que no limite em que o número de ocorrência de cada ação é zero, 
+    o valor correspondente em UCB tende a infinito, de modo que pela função argmax, 
+    será escolhida uma ação aleatoriamente. Posteriormente, a escolha de ação é com 
+    base no limite de confiança. Para c = 0, tem se o caso do <i>greedy</i> novamente.
+</p>
+{% endblock content %}

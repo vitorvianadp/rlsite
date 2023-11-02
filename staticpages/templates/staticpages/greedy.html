@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Algoritmos
+{% endblock title %}
+
+{% block pagestyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_infopages.css' %}">
+{% endblock pagestyle %}
+
+{% block content %}
+<h2>greedy</h2>
+<p>
+    O Algoritmo recebe o nome de <i>greedy</i> justamente por seu comportamento ganancioso, 
+    selecionando a cada instante de tempo <i>t</i> a ação com valor esperado máximo de recompensa. 
+    Embora essa pareça uma boa estratégia, como o algoritmo não explora suas opções, ele acaba 
+    ficando preso em uma solução subótima do problema, não desempenhando tão bem quanto outros 
+    algoritmos. A estratégia para esse algoritmo é justamente utilizar a função <i>argmax</i> 
+    definida na página de Teoria para selecionar sua ação a cada instante de tempo.
+</p>
+<img class="math_equation" src="{% static 'images/greedy.jpg' %}" alt="Seleção de ação greedy">
+<p>
+    Nesse sentido, o código para o agente <i>greedy</i> pode ser encontrado abaixo. Dentro do construtor 
+    são definidos 2 arrays que guardam respectivamente o número de vezes que cada ação foi realizada 
+    e o estimador para seu valor, além de uma variável que guarda a última ação selecionada. Já o 
+    método de passo do agente recebe a recompensa e atualiza as variáveis referentes à ação anterior, 
+    podendo escolher uma nova ação com base no valor modificado do estimador.
+</p>
+<p>
+    É importante perceber que foi utilizada a expressão definida na teoria para o cálculo de 
+    <i>Q</i> e que a ação atual é selecionada usando a fórmula acima, que caracteriza o algoritmo 
+    <i>greedy</i>. Uma outra observação, é que o vetor de estimadores iniciais foi iniciado como 
+    zero. Isso foi uma estratégia adotada para esse momento, mas mais para frente será visto 
+    como essa escolha pode afetar o desempenho do algoritmo.
+</p>
+<div class="code-slide">
+    <pre>
+        <code>
+    class GreedyAgent():
+        def __init__(self, k_arms):
+            self.n_arms = np.zeros(k_arms)
+            self.Q_values = np.zeros(k_arms)
+            self.last_action = np.random.randint(0, k_arms)
+
+        def agent_step(self, reward):
+
+            self.n_arms[self.last_action] += 1
+            # Q_(n+1) = Q_n + (R_n - Q_n)/n
+            current_Q = self.Q_values[self.last_action] + (reward - self.Q_values[self. last_action])/self.n_arms[self.last_action]
+            self.Q_values[self.last_action] = current_Q
+
+            current_action = argmax(self.Q_values)
+            self.last_action = current_action
+
+            return self.last_action
+        </code>
+    </pre>
+</div>
+<p>
+    Simulando 200 <i>runs</i> de 1000 <i>steps</i> cada, ou seja, pegando o desempenho 
+    do agente em 200 "rodadas" com 1000 seleções de ações (1000 instantes discretos de 
+    tempo em que foram tomadas ações) para <i>k</i> = 10 ações, obteve-se o desempenho a seguir:
+</p>
+<img class="content__image" src="{% static 'images/greedy_performance.jpg' %}" alt="Curva para greedy">
+<p>
+    Como é possível perceber, o algoritmo de fato cai em muitas vezes em uma solução subótima. 
+    Nesse sentido, percebe-se a necessidade de introduzir a exploração em algoritmos para que 
+    todas as ações sejam de fato conhecidas, permitindo tomar a melhor decisão. Mas antes de 
+    passar para o próximo algoritmo que busca balancear exploração e essa característica gananciosa 
+    do <i>greedy</i>, podemos ver uma mudança no <i>greedy</i> que induz uma exploração 
+    nos primeiros <i>steps</i>.
+</p>
+<p>
+    Uma vez que o algoritmo irá selecionar sempre a ação com maior valor esperado, se o vetor 
+    <i>Q</i> for definido com valores iniciais otimistas, ou seja, maiores que os valores 
+    esperados para cada recompensa de fato, o algoritmo irá explorar enquanto os valores dos 
+    estimadores estiverem sendo atualizados para perto dos valores reais de cada ação. Como na 
+    definição do ambiente foi definida uma distribuição uniforme entre -3 e 3, foi adoto o valor 
+    inicial 5 para as ações. Assim, pode-se definir o algoritmo <i>greedy with initial 
+    values</i> como:
+</p>
+<div class="code-slide">
+    <pre>
+        <code>
+    class GreedyWithInitialValuesAgent():
+        def __init__(self, k_arms):
+            self.n_arms = np.zeros(k_arms)
+            self.Q_values = [5] * k # valor inicial 5
+            self.last_action = np.random.randint(0, k_arms)
+
+        def agent_step(self, reward):
+
+            self.n_arms[self.last_action] += 1
+            # Q_(n+1) = Q_n + (R_n - Q_n)/n
+            current_Q = self.Q_values[self.last_action] + (reward - self.Q_values[self. last_action])/self.n_arms[self.last_action]
+            self.Q_values[self.last_action] = current_Q
+
+            current_action = argmax(self.Q_values)
+            self.last_action = current_action
+
+            return self.last_action
+        </code>
+    </pre>
+</div>
+<p>
+    Para esse algoritmo, com o mesmo procedimento adotado para o <i>greedy</i> puro foi obtida a curva a seguir:
+</p>
+<img class="content__image" src="{% static 'images/greedy_initial_performance.jpg' %}" alt="Curva para greedy com valores iniciais">
+<p>
+    Como observado, o algoritmo de fato desempenha melhor do que o anterior para esse tipo de problema. 
+    Além disso, o <i>spike</i> observado nos primeiros instantes da simulação está relacionado com o 
+    fato de o agente testar todas as ações no início, dado que seus valores estimados são mais 
+    altos que todos os valores reais para cada recompensa. Um último ponto é que para problemas 
+    reais em que a distribuição das recompensas altera com o tempo, pelo fato de a exploração 
+    ser restrita a um pequeno período de tempo, o algoritmo não iria desempenhar tão bem como 
+    aqui, pois ele não iria acompanhar essa atualização nos valores.
+</p>
+{% endblock content %}

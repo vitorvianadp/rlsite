@@ -1,9 +1,24 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
 Sobre
 {% endblock title %}
 
+{% block pagestyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_about.css' %}">
+{% endblock pagestyle %}
+
 {% block content %}
-<h2>Sobre este site</h2>
+<div id="main-content">
+    <h2 id="about-title">Sobre este site</h2>
+    <section id="site">
+        <article id="site__text">
+           <p>A</p>
+        </article>
+        <article id="site__photo">
+            <img src="{% static 'images/RL_diagram.png' %}" alt="Diagrama de RL">
+        </article>
+    </section>
+</div>
 {% endblock content %}

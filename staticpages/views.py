@@ -14,6 +14,14 @@ def theory(request):
     context = {}
     return render(request, 'staticpages/theory.html', context)
 
-def algorithms(request):
+def e_greedy(request):
     context = {}
-    return render(request, 'staticpages/algorithms.html', context)
+    return render(request, 'staticpages/e_greedy.html', context)
+
+def greedy(request):
+    context = {}
+    return render(request, 'staticpages/greedy.html', context)
+
+def ucb(request):
+    context = {}
+    return render(request, 'staticpages/ucb.html', context)

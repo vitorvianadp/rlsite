@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Algoritmos
+{% endblock title %}
+
+{% block pagestyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_infopages.css' %}">
+{% endblock pagestyle %}
+
+{% block content %}
+<h2>ε-greedy</h2>
+<p>
+    O algoritmo <i>ε-greedy</i> busca balancear exploração e ações gananciosas. 
+    Embora em curto prazo o <i>greedy</i> pode desempenhar melhor do que esse algoritmo, 
+    quando consideramos uma <i>run</i> com um número muito grande de <i>steps</i> é o <i>ε-greedy</i> 
+    que obtém valores maiores de recompensa, uma vez que podendo explorar em alguns momentos, o último 
+    apresenta a possibilidade de conhecer os valores de todas as ações, determinando, assim, a ação ideal 
+    e podendo se aproveitar dela.
+</p>
+<p>
+    No entanto, se a cada passo o agente escolher aleatoriamente uma ação, ele terá uma chance de 
+    1/<i>k</i> de escolher uma ação <i>a</i> e assumindo que ela possui valor maior do que todas as outras, 
+    o agente iria escolher a ação ideal em 1/<i>k</i> dos casos. Nesse sentido, o algoritmo não deve 
+    explorar sempre, buscando encontrar um ponto de equilíbrio ideal entre o número de vezes em que 
+    decide explorar e o número em que decide escolher a ação com valor esperado máximo. Assim, 
+    define-se a escolha desse algoritmo como:
+</p>
+<img class="math_equation" src="{% static 'images/egreedy.jpg' %}" alt="Seleção de ação no algoritmo">
+<p>
+    Da formulação acima, segue que para um número grande de steps o algoritmo irá selecionar a 
+    ação ideal com uma probabilidade maior que (1 - ε). Precisamente irá selecioná-la com uma 
+    probabilidade igual a (1 - ε + ε * 1/<i>k</i>). Tendo essa definição em mente, o código fica como se segue:
+</p>
+<div class="code-slide">
+    <pre>
+        <code>
+    class EpsilonGreedy():
+        def __init__(self, k_arms, epsilon=0.1):
+            self.epsilon = epsilon
+            self.k_arms = k_arms
+            self.n_arms = np.zeros(k_arms)
+            self.Q_values = np.zeros(k_arms)
+            self.last_action = np.random.randint(0, k_arms)
+
+        def agent_step(self, reward):
+
+            self.n_arms[self.last_action] += 1
+            current_Q = self.Q_values[self.last_action] + (reward - self.Q_values[self. last_action])/self.n_arms[self.last_action]
+            self.Q_values[self.last_action] = current_Q
+
+            u = np.random.random() # número aleatório real entre 0 e 1
+
+            if u < self.epsilon:
+                current_action = np.random.randint(0, self.k_arms)
+            else:
+                current_action = argmax(self.Q_values)
+
+            self.last_action = current_action
+
+            return self.last_action
+        </code>
+    </pre>
+</div>
+<p>
+    Comparando com o código para <i>greedy</i>, a parte diferente é a seleção da próxima ação, 
+    em que o número gerado aleatoriamente entre 0 e 1 deve ser menor que o valor atribuído a ε 
+    na criação do agente (<i>default</i> igual a 0.1) para que ocorra exploração. Com 3000 <i>steps</i> 
+    agora na simulação e atribuindo diversos valores para ε (inclusive zero que equivale ao <i>greedy</i>) 
+    para fins de comparação, o resultado obtido para o agente treinado encontra-se na figura abaixo.
+</p>
+<img class="content__image" src="{% static 'images/egreedy_performance.jpg' %}" alt="Curva para ε-greedy">
+<p>
+    Os resultados obtidos indicam que o algoritmo com ε = 0 e com ε = 0.5 (muitas ações 
+    aleatoriamente escolhidas) são os que desempenham pior no sentido de que a curva de 
+    recompensa média para de crescer com um número relativamente baixo de steps. É possível 
+    observar que o <i>greedy</i> cresce mais rapidamente no início que os demais, mas para de crescer 
+    antes também.
+</p>
+<p>
+    Já para ε = 0.01 e ε = 0.05, como há o fenômeno de exploração, os agentes não ficam 
+    travados em um ação específica logo de cara, de modo que a recompensa continua a subir 
+    ao longo dos steps. A tendência é que aumentando o número de steps, esses algoritmos 
+    sejam capazes de identificar a ação com maior valor esperado e consigam desempenhar melhor.
+</p>
+
+{% endblock content %}
