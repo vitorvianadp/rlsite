@@ -1,0 +1,44 @@
+main {
+    width: 60%;
+    margin: 0 auto;
+    flex: 1;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: large;
+    text-align: justify;
+  }
+
+h2 {
+    text-align: center;
+  }
+
+.math_equation {
+    display: block;
+    width: 350px;
+    margin: 20px auto;
+  }
+
+@media screen and (max-width: 700px) {
+    main{
+      width: 80%;
+    }
+
+    .math_equation {
+      width: 100%; 
+    }
+
+  }
+
+.code-slide {
+    overflow-x: auto;
+    max-width: 100%;
+    border: 1px solid #ccc;
+    padding: 5px;
+    margin-bottom: 10px;
+    background-color: #f0f0f0;
+}
+
+.code-slide code {
+    font-family: Consolas, Monaco, monospace;
+    font-size: 14px;
+    line-height: 1.4;
+}

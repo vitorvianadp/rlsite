@@ -6,14 +6,12 @@ Página inicial
 {% endblock title %}
 
 {% block pagestyle %}
-<link rel="stylesheet" type="text/css" href="{% static 'style_infopage.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_homepage.css' %}">
 {% endblock pagestyle %}
 
 {% block content %}
 <p>Comece sua jornada conhecendo os algoritmos para o problema inicial de RL.</p>
 <p id="image__legend"> Representação do dilema "exploration vs exploitation" </p>
-<a href="{% url 'index' %}"> 
-    <img class="content__image" src="{% static 'dark_robot.jpg' %}" alt="Exploration vs exploitation dilemma"> 
-</a>
+<img class="content__image" src="{% static 'images/dark_robot.jpg' %}" alt="Exploration vs exploitation dilemma"> 
 <p>Esse site reúne minhas anotações sobre a parte introdutória da teoria de Aprendizado por Reforço e seu objetivo é meramente informativo.</p>
 {% endblock content %}

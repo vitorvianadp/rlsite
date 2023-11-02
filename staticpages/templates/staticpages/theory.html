@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Teoria 
+{% endblock title %}
+
+{% block pagestyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_theory.css' %}">
+{% endblock pagestyle %}
+
+{% block content %}
+<h2>Teoria</h2>
+<p>
+    Em aprendizado por reforço, diferente dos outros modos de aprendizado conhecidos no 
+    contexto da Inteligência Artificial, a informação de treinamento é utilizada para avaliar 
+    as ações tomadas pelo agente ao invés de instruí-lo com a resposta correta. Nesse sentido, 
+    surge a necessidade do agente em explorar as suas opções para determinar qual a melhor 
+    ação a ser tomada.
+</p>
+<p>
+    O agente pode ser entendido como a entidade que interage com o ambiente, executando ações 
+    que afetam o estado deste ambiente. Seu objetivo é maximizar o valor recebido em recompensas 
+    (feedback que é utilizado para avaliar suas ações), de modo que surge um dilema entre explorar, 
+    selecionando aleatoriamente uma ação para conhecer melhor a sua distribuição de recompensas, 
+    e se aproveitar de uma única ação cujo valor é o maior dentre as ações com valores conhecidos. 
+    Esse é o dilema <i>exploration vs exploitation</i>, no qual apenas um dos dois comportamentos pode 
+    ser adotado na tomada de uma ação.
+</p>
+<p>
+    A configuração mais básica de um problema de RL é o caso em que o agente não precisa aprender 
+    a escolher suas ações em situações distintas, isto é, ele é apresentado sempre para as mesmas 
+    opções e no mesmo estado do ambiente. Considerando o problema com <i>k</i> ações disponíveis para 
+    escolha, denomina-se esse problema como <i>k-armed Bandit Problem</i> como uma referência ao problema 
+    de escolher uma dentre as <i>k</i> alavancas de um caça-níquel.
+</p>
+<p>
+    Da teoria da estatística e conhecendo a distribuição de recompensa, deriva que o valor de uma ação 
+    <i>a</i> pode ser expresso como o valor esperado para a recompensa no instante de tempo <i>t</i> considerando 
+    que essa ação foi tomada. Além disso, sabe-se da Probabilidade que o valor esperado da recompensa 
+    será dado pelo somatório dos produtos entre cada valor de recompensa e sua respectiva probabilidade 
+    considerando que a ação <i>a</i> foi tomada. Assim:
+</p>
+<img class="math_equation" src="{% static 'images/expected_reward.jpg' %}" alt="Recompensa esperada"> 
+<p>
+    Dessa maneira, conhecendo os valores de cada ação, para um instante <i>t</i> é possível determinar qual 
+    ação é mapeada para o maior valor de recompensa, de modo que o objetivo de maximizar o total de recompensas 
+    pode ser atingido. Se de fato todos os valores fossem conhecidos, bastaria ao agente sempre selecionar a 
+    ação com maior valor esperado para recompensa. Esse comportamento está relacionado a um conceito já 
+    apresentado (<i>exploit</i>) e pode ser definido como ganancioso (<i>greedy</i>). 
+</p>
+<p>
+    Normalmente, os valores de recompensa não são conhecidos. Assim, eles devem ser estimados considerando 
+    as avaliações recebidas pelo agente a cada ação tomada. Pela teoria da Probabilidade, sabe-se que para 
+    um número muito grande de vezes em que cada ação foi selecionada o estimador <i>Q</i> irá convergir para 
+    <i>q</i> , sendo <i>Q</i> dado pela razão entre a soma das recompensas recebidas para <i>a</i> sobre o número de 
+    vezes que <i>a</i> foi tomada. Entretanto, calcular essa expressão a cada passo tem um custo computacional 
+    alto, de modo que podemos derivar a seguinte fórmula:
+</p>
+<img class="math_equation" src="{% static 'images/reward_estimation.jpg' %}" alt="Estimativa para recompensa"> 
+<p>
+    Da formulação acima, segue que o <b>novo valor</b> é dado por 
+    <b>valor antigo</b> + <b>passo</b> x (<b>valor alvo</b> - <b>valor antigo</b>), de forma que o valor é atualizado na 
+    direção de aproximação em relação ao valor alvo. Mudando o <b>passo</b> para um valor constante, obtém-se 
+    uma soma ponderada das recompensas, em que as recompensas mais recentes tem um peso maior 
+    (valoriza os valores mais recentes em detrimento aos mais antigos, o que pode ser útil 
+    em casos não estacionários, ou seja, em que a distribuição do valor de recompensa se altera com o tempo).
+</p>
+<p>
+    Com esses conceitos definidos, agora será criado o ambiente em que os algoritmos serão treinados.
+</p>
+<div class="code-slide">
+    <pre>
+        <code>
+    import numpy as np
+
+    class Bandit():
+
+        def __init__(self, k_arms=10):
+            # gera k números aleatórios uniformemente distribuídos entre -3 e 3
+            self.bandits_expectations = np.random.uniform(-3, 3, k_arms)
+
+        def gamble(self, action):
+            # ação(int) -> recompensa(int)
+            return np.random.normal(self.bandits_expectations[action], 1)
+        </code>
+    </pre>
+</div>
+<p>
+    Para esse caso, o número <i>default</i> de ações é 10. Além disso, foi considerada uma distribuição 
+    uniforme para as recompensas associadas a cada ação conforme definido no construtor da classe 
+    <i>Bandit</i>. O método <i>gamble</i> recebe a ação executada pelo agente e retorna um valor para a 
+    recompensa baseado na distribuição normal definida com desvio padrão 1.
+</p>
+<p>
+    Finalmente, antes de passar para os algoritmos, é interessante definir a função <i>argmax</i>, a qual 
+    retorna a ação com maior valor esperado. Vale ressaltar que em casos de empate, a ação é selecionada 
+    aleatoriamente entre as de valor máximo.
+</p>
+<div class="code-slide">
+    <pre>
+        <code>
+    def argmax(Q_values):
+
+        max_value = float("-inf")
+        ties = []
+
+        for i in range(len(Q_values)):
+            if Q_values[i] > max_value:
+                max_value = Q_values[i]
+                ties = []
+            if Q_values[i] == max_value:
+                ties.append(i)
+
+        return ties[np.random.randint(0, len(ties))]
+        </code>
+    </pre>
+</div>
+
+{% endblock content %}

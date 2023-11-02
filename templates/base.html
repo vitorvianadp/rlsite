@@ -11,7 +11,7 @@
         {% block title %}{% endblock %} | Aprendizado por Reforço
     </title>
     <link  rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     {% block pagestyle %}
     {% endblock pagestyle %}
 </head>
@@ -21,13 +21,21 @@
         <h1>Algoritmos de RL</h1>
         <nav id="staticpages-nav">
             <ul>
-                <li class="nav__item"><a href="{% url 'index' %}" class="icon__page">
+                <li class="nav__item"><a href="{% url 'index' %}">
                     <span class="material-icons">home </span>
                     Home
                 </a></li>
-                <li class="nav__item"><a href="{% url 'about' %}" class="icon__page">
+                <li class="nav__item"><a href="{% url 'about' %}">
                     <span class="material-icons">info </span>
                     Sobre
+                </a></li>
+                <li class="nav__item"><a href="{% url 'theory' %}">
+                    <span class="material-icons">book </span>
+                    Teoria
+                </a></li>
+                <li class="nav__item"><a href="{% url 'algorithms' %}">
+                    <span class="material-icons">terminal </span>
+                    Algoritmos
                 </a></li>
             </ul>
         </nav>
