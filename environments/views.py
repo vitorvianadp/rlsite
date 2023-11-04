@@ -1,82 +1,58 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.views import generic
 from .models import Post
 from .forms import PostForm
 
-def list_environment_posts(request):
-    posts_list = Post.objects.all()
-    context = {"posts_list": posts_list}
-    return render(request, 'environments/index.html', context)
+class PostListView(generic.ListView):
+    model = Post
+    template_name = 'environments/index.html'
 
-def detail_environment_post(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-    context = {'post': post}
-    return render(request, 'environments/detail.html', context)
+class PostDetailView(generic.DetailView):
+    model = Post
+    template_name = 'environments/detail.html'
 
-def search_environment_posts(request):
-    context = {}
-    if request.GET.get('query', False):
-        search_term = request.GET['query'].lower()
-        posts_list = Post.objects.filter(environment_name__icontains=search_term)
-        context = {"posts_list": posts_list}
-    return render(request, 'environments/search.html', context)
+class PostSearchView(generic.ListView):
+    model = Post
+    template_name = 'environments/search.html'
+    context_object_name = 'posts_list'
 
-def create_environment_post(request):
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post_title = form.cleaned_data['title']
-            environment_name = form.cleaned_data['environment_name']
-            actions_number = form.cleaned_data['actions_number']
-            content = form.cleaned_data['content']
-            gif_url = form.cleaned_data['gif_url']
-            post = Post(title=post_title,
-                        environment_name=environment_name,
-                        actions_number=actions_number,
-                        content=content,
-                        gif_url=gif_url)
-            post.save()
-            return HttpResponseRedirect(
-                reverse('environments:detail', args=(post.id, )))
-    else:
-        form = PostForm()
-    context = {'form': form}
-    return render(request, 'environments/create.html', context)
-    
-def update_environment_post(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
+    def get_queryset(self):
+        query = self.request.GET.get('query', '').lower()
+        return Post.objects.filter(environment_name__icontains=query)
 
-    if request.method == 'POST':
-        form = PostForm(request.POST)
-        if form.is_valid():
-            post.title = form.cleaned_data['title']
-            post.environment_name = form.cleaned_data['environment_name']
-            post.actions_number = form.cleaned_data['actions_number']
-            post.content = form.cleaned_data['content']
-            post.gif_url = form.cleaned_data['gif_url']
-            post.save()
-            return HttpResponseRedirect(
-                reverse('environments:detail', args=(post.id, )))
-    else:
-        form = PostForm(
-            initial={
-                'title': post.title,
-                'environment_name': post.environment_name,
-                'actions_number': post.actions_number,
-                'content': post.content,
-                'gif_url': post.gif_url
-            })
+class PostCreateView(generic.CreateView):
+    model = Post
+    fields = [
+        'title',
+        'environment_name',
+        'actions_number',
+        'content',
+        'gif_url',
+    ]
+    template_name = 'environments/create.html'
 
-    context = {'post': post, 'form': form}
-    return render(request, 'environments/update.html', context)
+    def get_success_url(self):
+        return reverse('environments:detail', kwargs={'pk': self.object.pk})
 
-def delete_environment_post(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
+class PostUpdateView(generic.UpdateView):
+    model = Post
+    fields = [
+        'title',
+        'environment_name',
+        'actions_number',
+        'content',
+        'gif_url',
+    ]
+    template_name = 'environments/update.html'
 
-    if request.method == "POST":
-        post.delete()
-        return HttpResponseRedirect(reverse('environments:index'))
+    def get_success_url(self):
+        return reverse('environments:detail', kwargs={'pk': self.object.pk})
 
-    context = {'post': post}
-    return render(request, 'environments/delete.html', context)
+class PostDeleteView(generic.DeleteView):
+    model = Post
+    template_name = 'environments/delete.html'
+
+    def get_success_url(self):
+        return reverse('environments:index')

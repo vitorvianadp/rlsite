@@ -23,9 +23,9 @@ Ambientes
     <a href="{% url 'environments:create' %}">Adicionar Novo Ambiente</a>
   </p>
 </section>
-{% if posts_list %}  <!-- checa se não está vazia -->
+{% if post_list %}  <!-- checa se não está vazia -->
 <section class="cards-list">
-    {% for post in posts_list %}
+    {% for post in post_list %}
     <article class="card">
       <div class="card-content">
         <h3>{{ post.title }}</h3>
