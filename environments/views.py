@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .models import Post
+from .forms import PostForm
 
 def list_environment_posts(request):
     posts_list = Post.objects.all()
@@ -23,40 +24,52 @@ def search_environment_posts(request):
 
 def create_environment_post(request):
     if request.method == 'POST':
-        post_title = request.POST['title']
-        environment_name = request.POST['environment_name']
-        actions_number = request.POST['actions_number']
-        content = request.POST['content']
-        #creation_date = request.POST['creation_date']
-        gif_url = request.POST['gif_url']
-        post = Post(title=post_title,
-                      environment_name=environment_name,
-                      actions_number=actions_number,
-                      content=content,
-                      #creation_date=creation_date,
-                      gif_url=gif_url)
-        post.save()
-        return HttpResponseRedirect(
-            reverse('environments:detail', args=(post.id, )))
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post_title = form.cleaned_data['title']
+            environment_name = form.cleaned_data['environment_name']
+            actions_number = form.cleaned_data['actions_number']
+            content = form.cleaned_data['content']
+            gif_url = form.cleaned_data['gif_url']
+            post = Post(title=post_title,
+                        environment_name=environment_name,
+                        actions_number=actions_number,
+                        content=content,
+                        gif_url=gif_url)
+            post.save()
+            return HttpResponseRedirect(
+                reverse('environments:detail', args=(post.id, )))
     else:
-        return render(request, 'environments/create.html', {})
+        form = PostForm()
+    context = {'form': form}
+    return render(request, 'environments/create.html', context)
     
 def update_environment_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
 
-    if request.method == "POST":
-        post.title = request.POST['title']
-        post.environment_name = request.POST['environment_name']
-        post.actions_number = request.POST['actions_number']
-        post.content = request.POST['content']
-        post.gif_url = request.POST['gif_url']
-        post.save()
-        return HttpResponseRedirect(
-            reverse('environments:detail', args=(post.id, )))
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            post.title = form.cleaned_data['title']
+            post.environment_name = form.cleaned_data['environment_name']
+            post.actions_number = form.cleaned_data['actions_number']
+            post.content = form.cleaned_data['content']
+            post.gif_url = form.cleaned_data['gif_url']
+            post.save()
+            return HttpResponseRedirect(
+                reverse('environments:detail', args=(post.id, )))
+    else:
+        form = PostForm(
+            initial={
+                'title': post.title,
+                'environment_name': post.environment_name,
+                'actions_number': post.actions_number,
+                'content': post.content,
+                'gif_url': post.gif_url
+            })
 
-    context = {'post': post}
+    context = {'post': post, 'form': form}
     return render(request, 'environments/update.html', context)
-
 
 def delete_environment_post(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
