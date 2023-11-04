@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Criar Post
+{% endblock title %}
+
+{% block pagestyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_environments.css' %}">
+{% endblock pagestyle %}
+
+{% block content %}
+<h2>Adicionar novo post</h2>
+<form method="POST" action="{% url 'environments:create' %}">
+  {% csrf_token %}
+  <p>
+    <label for="id_title">Título:</label>
+    <input type="text" name="title" id="id_title" />
+  </p>
+  <p>
+    <label for="id_environment_name">Ambiente:</label>
+    <input type="text" name="environment_name" id="id_environment_name" />
+  </p>
+  <p>
+    <label for="id_actions_number">Número de ações:</label>
+    <input type="number" name="actions_number" id="id_actions_number" />
+  </p>
+  <p>
+    <label for="id_content">Descrição do ambiente:</label>
+    <input type="text" name="content" id="id_content" />
+  </p>
+  <p>
+    <label for="id_gif_url">URL do gif do ambiente:</label>
+    <input type="url" name="gif_url" id="id_gif_url" />
+  </p>
+  <button type="submit">Criar</button>
+</form>
+
+{% endblock content %}

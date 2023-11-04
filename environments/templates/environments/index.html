@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Ambientes
+{% endblock title %}
+
+{% block pagestyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_environments.css' %}">
+{% endblock pagestyle %}
+
+{% block content %}
+<h2 id="envpage-title">Encontre o ambiente ideal</h2>
+<section>
+  <p> 
+    Essa página reúne exemplos de ambientes discretos para treinar seus agentes.
+  </p>
+  <p>
+    Muitos resultados? <a href="{% url 'environments:search' %}">Buscar Ambientes</a>
+  </p>
+  <p>
+    Não encontrou o ambiente?
+    <a href="{% url 'environments:create' %}">Adicionar Novo Ambiente</a>
+  </p>
+</section>
+{% if posts_list %}  <!-- checa se não está vazia -->
+<section class="cards-list">
+    {% for post in posts_list %}
+    <article class="card">
+      <div class="card-content">
+        <h3>{{ post.title }}</h3>
+        <a href="{% url 'environments:detail' post.id %}">
+          <img src="{{ post.gif_url }}" alt="GIF do ambiente {{ post.environment_name }}" />
+        </a>
+      </div>
+      <p id="env-name">
+        <i>{{ post.environment_name }}</i>
+      </p>
+      <p>
+        <span class="material-icons">calendar_month </span>
+        Criado em: {{ post.creation_date|date:"j/m/y" }} às {{ post.creation_date|date:"H:i" }}
+      </p>
+    </article>
+  {% endfor %}
+</section>
+{% else %}
+<p>Não há nenhum ambiente registrado.</p>
+{% endif %} {% endblock content %}

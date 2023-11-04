@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Apagar Post
+{% endblock title %}
+
+{% block pagestyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_environments.css' %}">
+{% endblock pagestyle %}
+
+{% block content %}
+<form action="{% url 'environments:delete' post.id %}" method="post">
+  {% csrf_token %}
+  <p>
+    Você tem certeza que deseja apagar o post "{{ post.title }} do ambiente <i>{{ post.environment_name }}</i>"?
+  </p>
+  <button type="submit">Apagar</button>
+</form>
+{% endblock content %}

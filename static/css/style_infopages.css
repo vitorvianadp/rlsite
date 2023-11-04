@@ -13,10 +13,15 @@ main {
     margin: 20px auto;
   }
 
-#image__legend {
+#image__title {
     display: flex;
     justify-content: center;
     font-weight: bold;
+  }
+
+#image__legend {
+    display: flex;
+    justify-content: center;
   }
 
 h2 {

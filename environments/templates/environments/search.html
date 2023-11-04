@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Busca
+{% endblock title %}
+
+{% block pagestyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_environments.css' %}">
+{% endblock pagestyle %}
+
+{% block content %}
+<h2>Busca por um ambiente</h2>
+<form action="{% url 'environments:search' %}">
+    <p>
+        <label for="id_query">Ambiente:</label>
+        <input type="text" name="query" id="id_query" />
+    </p>
+    <button type="submit">Buscar</button>
+</form>
+
+
+<h2>Resultado da Busca</h2>
+{% if posts_list %}
+<section class="cards-list">
+    {% for post in posts_list %}
+    <article class="card">
+        <div class="card-content">
+          <h3>{{ post.title }}</h3>
+          <a href="{% url 'environments:detail' post.id %}">
+            <img src="{{ post.gif_url }}" alt="GIF do ambiente {{ post.environment_name }}" />
+          </a>
+        </div>
+        <p id="env-name">
+          <i>{{ post.environment_name }}</i>
+        </p>
+        <p>
+          <span class="material-icons">calendar_month </span>
+          Criado em: {{ post.creation_date|date:"j/m/y" }} às {{ post.creation_date|date:"H:i" }}
+        </p>
+      </article>
+    {% endfor %}
+</section>
+{% else %}
+<p>O ambiente {{ post.environment_name }} não foi registrado em nenhum de nossos posts.</p>
+{% endif %}
+
+{% endblock content %}

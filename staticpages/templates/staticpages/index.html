@@ -10,12 +10,23 @@ Página inicial
 {% endblock pagestyle %}
 
 {% block content %}
-<p>Comece sua jornada conhecendo os algoritmos para o problema inicial de RL.</p>
+<p>
+    Esse site é voltado para o estudo dos dois elementos centrais em Aprendizado por Reforço 
+    (<i>Reinforcement Learning</i>): agente e ambiente.
+</p>
+<p>
+    A proposta é apresentar a teoria de um problema inicial da teoria de RL, algoritmos que 
+    possibilitam o entendimento de como o agente se comporta diante do meio e possibilitar
+    discussões acerca dos diferentes tipos de ambientes conhecidos pela comunidade.
+</p>
 <figure>
-    <figcaption id="image__legend">
-        Representação do dilema "exploration vs exploitation"
+    <figcaption id="image__title">
+        Esquema para a relação fundamental de RL entre o agente e o meio
     </figcaption>
-    <img class="content__image" src="{% static 'images/dark_robot.jpg' %}" alt="Exploration vs exploitation dilemma">
+    <img class="content__image" src="{% static 'images/RL_diagram.png' %}" alt="Diagrama aprendizado por reforço">
+    <figcaption id="image__legend">
+        A imagem acima foi retirada do livro Reinforcement Learning: An Introduction escrito por 
+        Richard S. Sutton e Andrew G. Barto
+    </figcaption>
 </figure>
-<p>Esse site reúne minhas anotações sobre a parte introdutória da teoria de Aprendizado por Reforço e seu objetivo é meramente informativo.</p>
 {% endblock content %}

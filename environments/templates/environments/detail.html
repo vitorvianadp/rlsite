@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+{{ post.environment_name }}
+{% endblock title %}
+
+{% block pagestyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style_environments.css' %}">
+{% endblock pagestyle %}
+
+{% block content %}
+<div class ="post">
+  <section class="env-data">
+    <div class="post-content">
+      <div class="post-header">
+          <span id="post-author">Descrição do ambiente</span>
+          <span id="post-date">Criação: {{ post.creation_date|date:"j/m/y" }} às {{ post.creation_date|date:"H:i" }}</span>
+      </div>
+      <div class="post-body">
+        <h3>{{ post.title }}</h3>
+        <div>
+          {{ post.content|safe }}
+        </div>
+        <img src="{{ post.gif_url }}" alt="GIF do ambiente {{ post.environment_name }}" class="env-image"/>
+        <div class="post-attributes">
+          <table>
+              <tr id="env-row">
+                  <td>Ambiente</td>
+                  <td>{{ post.environment_name }}</td>
+              </tr>
+              <tr id="actions-row">
+                  <td>Número de ações</td>
+                  <td>{{ post.actions_number }}</td>
+              </tr>
+          </table>
+        </div>
+      </div>
+      <li><a href="{% url 'environments:update' post.id %}">Editar</a></li>
+      <li><a href="{% url 'environments:delete' post.id %}">Apagar</a></li>
+    </div>
+  </section>
+</div>    
+{% endblock content %}
