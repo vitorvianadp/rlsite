@@ -40,5 +40,31 @@
       <li><a href="{% url 'environments:delete' post.id %}">Apagar</a></li>
     </div>
   </section>
-</div>    
+</div>
+
+<hr>
+
+<section>
+    <header>
+        <h3>Comentários</h3>
+    </header>
+    <ul>
+        {% if post.comment_set.all %}
+            {% for comment in post.comment_set.all|dictsortreversed:"date" %}
+                <figure>
+                    <blockquote>
+                        "{{ comment.text }}"
+                    </blockquote>
+                    <figcaption>—{{ comment.author }} ({{ comment.date|date:"j/m/y" }} às {{ comment.date|date:"H:i" }})</figcaption>
+                </figure>
+            {% endfor %}
+        {% else %}
+            <p>Não foi comentado nada sobre esse post. Adicione sua opinião sobre esse ambiente.</p>
+        {% endif %}
+    </ul>
+    <hr>
+
+    <a href="{% url 'environments:comment' post.pk %}"><button>Comente</button></a>
+</section>
+  
 {% endblock content %}

@@ -15,11 +15,11 @@ class Post(models.Model):
         return f'{self.title} (Ambiente: {self.environment_name})'
 
 
-class Opinion(models.Model):
+class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL,
                                on_delete=models.CASCADE)
     text = models.CharField(max_length=255)
-    likes = models.IntegerField(default=0)
+    date = models.DateTimeField(default=timezone.now)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     def __str__(self):

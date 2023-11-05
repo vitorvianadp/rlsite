@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Comentar em {{ post.title }} (<i>{{ post.environment_name }}</i>)</h2>
+
+<form action="{% url 'environments:comment' post.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Comentar</button>
+</form>
+
+<p><a href="{% url 'environments:detail' post.id %}">Voltar para a página do post</a></p>
+{% endblock content %}
