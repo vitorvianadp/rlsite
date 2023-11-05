@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-Ambientes
+{{ page_title }}
 {% endblock title %}
 
 {% block pagestyle %}
@@ -10,10 +10,11 @@ Ambientes
 {% endblock pagestyle %}
 
 {% block content %}
-<h2 id="envpage-title">Encontre o ambiente ideal</h2>
+<h2 id="envpage-title">{{ envpage_title }}</h2>
+{% if not category %}
 <section>
   <p> 
-    Essa página reúne exemplos de ambientes discretos para treinar seus agentes.
+    Essa página reúne exemplos de ambientes discretos para treinar seus agentes. Clique sobre a imagem para acessar o post.
   </p>
   <p>
     Muitos resultados? <a href="{% url 'environments:search' %}">Buscar Ambientes</a>
@@ -23,15 +24,22 @@ Ambientes
     <a href="{% url 'environments:create' %}">Adicionar Novo Ambiente</a>
   </p>
 </section>
+{% endif %}
 {% if post_list %}  <!-- checa se não está vazia -->
 <section class="cards-list">
     {% for post in post_list %}
     <article class="card">
       <div class="card-content">
         <h3>{{ post.title }}</h3>
+        {% if not category %}
         <a href="{% url 'environments:detail' post.id %}">
           <img src="{{ post.gif_url }}" alt="GIF do ambiente {{ post.environment_name }}" />
         </a>
+        {% else %}
+        <a href="{% url 'environments:category-post-detail' category_id post.id %}">
+          <img src="{{ post.gif_url }}" alt="GIF do ambiente {{ post.environment_name }}" />
+        </a>
+        {% endif %}
       </div>
       <p id="env-name">
         <i>{{ post.environment_name }}</i>

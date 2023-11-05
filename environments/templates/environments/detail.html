@@ -34,6 +34,14 @@
                   <td>{{ post.actions_number }}</td>
               </tr>
           </table>
+          {% if post.category_set.all %}
+          <p>Incluso nas categorias</p>
+          {% for category in post.category_set.all %}
+            <li>
+              <a href="{% url 'environments:category-posts' category.id %}"> {{ category.name }} </a>
+            </li>
+          {% endfor %}
+          {% endif %}
         </div>
       </div>
       <li><a href="{% url 'environments:update' post.id %}">Editar</a></li>
