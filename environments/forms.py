@@ -1,8 +1,8 @@
-from django.forms import ModelForm
+from django import forms
 from .models import Post, Comment
 
 
-class PostForm(ModelForm):
+class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
@@ -19,8 +19,16 @@ class PostForm(ModelForm):
             'content': 'Descrição do ambiente',
             'gif_url': 'URL do gif do ambiente',
         }
+    
+    def clean_gif_url(self):
+        gif_url = self.cleaned_data.get('gif_url')
 
-class CommentForm(ModelForm):
+        if gif_url and not gif_url.startswith('https://gymnasium'):
+            raise forms.ValidationError('O gif deve ser de um ambiente do gymnasium.')
+
+        return gif_url
+
+class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = [

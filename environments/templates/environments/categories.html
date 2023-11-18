@@ -17,9 +17,16 @@ Categorias
     <hr>
     <article>
         <header>
-            <a href="{% url 'environments:category-posts' category.id %}">
-                <h3>{{ category.name }}</h3>
-            </a>
+            <div class="link-columns">
+                <div class="link-column">
+                    <a href="{% url 'environments:category-posts' category.id %}">
+                        <h3>
+                            <span class="material-icons">category </span>
+                            {{ category.name }}
+                        </h3>
+                    </a>
+                </div>
+            </div>
         </header>
         <p>{{ category.description }}</p>
         {% for post in category.posts.all %}

@@ -16,13 +16,20 @@
   <p> 
     Essa página reúne exemplos de ambientes discretos para treinar seus agentes. Clique sobre a imagem para acessar o post.
   </p>
-  <p>
-    Muitos resultados? <a href="{% url 'environments:search' %}">Buscar Ambientes</a>
-  </p>
-  <p>
-    Não encontrou o ambiente?
-    <a href="{% url 'environments:create' %}">Adicionar Novo Ambiente</a>
-  </p>
+  <div class="link-columns">
+    <div class="link-column">
+      <a href="{% url 'environments:search' %}">
+        <span class="material-icons">search </span>
+        Buscar Ambientes
+      </a>
+    </div>
+    <div class="link-column">
+      <a href="{% url 'environments:create' %}">
+        <span class="material-icons">add </span>
+        Adicionar Novo Ambiente
+      </a>
+    </div>
+  </div>
 </section>
 {% endif %}
 {% if post_list %}  <!-- checa se não está vazia -->
