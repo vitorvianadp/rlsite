@@ -29,6 +29,10 @@ Categorias
             </div>
         </header>
         <p>{{ category.description }}</p>
+        <h4>
+            <span class="material-icons">rocket_launch </span>
+            Ambientes
+        </h4>
         {% for post in category.posts.all %}
         <p id="env-name">
             <i>{{ post.environment_name }}</i>

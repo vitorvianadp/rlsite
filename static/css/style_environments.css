@@ -155,3 +155,10 @@ main {
 .link-column a:hover {
     text-decoration: underline;
   }
+
+figure {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    margin: 0 15% 0 5%;
+}

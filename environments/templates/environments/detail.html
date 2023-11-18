@@ -76,22 +76,26 @@
           Comentários
         </h3>
     </header>
-    <ul>
-        {% if post.comment_set.all %}
-            {% for comment in post.comment_set.all|dictsortreversed:"date" %}
-                <figure>
-                    <blockquote>
-                        "{{ comment.text }}"
-                    </blockquote>
-                    <figcaption>—{{ comment.author }} ({{ comment.date|date:"j/m/y" }} às {{ comment.date|date:"H:i" }})</figcaption>
-                </figure>
-            {% endfor %}
-        {% else %}
-            <p>Não foi comentado nada sobre esse post. Adicione sua opinião sobre esse ambiente.</p>
-        {% endif %}
-    </ul>
-    
+    {% if post.comment_set.all %}
+        {% for comment in post.comment_set.all|dictsortreversed:"date" %}
+            <figure>
+                <figcaption>
+                  <span class="material-icons">account_circle </span>
+                  {{ comment.author }}<br>
+                  {{ comment.date|date:"j/m/y" }} às {{ comment.date|date:"H:i" }}
+                </figcaption>
+                <blockquote>
+                    <span class="material-icons">chat </span>
+                    {{ comment.text }}
+                </blockquote>
+            </figure>
+            <br>
+        {% endfor %}
+    {% else %}
+        <p>Não foi comentado nada sobre esse post. Adicione sua opinião sobre esse ambiente.</p>
+    {% endif %}
+
     <a href="{% url 'environments:comment' post.pk %}"><button>Comente</button></a>
 </section>
-  
+<br>
 {% endblock content %}
