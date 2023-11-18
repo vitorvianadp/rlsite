@@ -23,7 +23,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'"{self.text}" - {self.author.username}'
+        return f'"{self.text}" - {self.author.username} em {self.post.environment_name}'
     
 class Category(models.Model):
     name = models.CharField(max_length=50)
